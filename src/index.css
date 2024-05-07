@@ -1,0 +1,11 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+*, HTML{
+  scroll-behavior: smooth;
+}
+
+.carousel img{
+  height: 700px;
+}

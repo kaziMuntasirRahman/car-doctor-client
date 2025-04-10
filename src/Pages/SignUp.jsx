@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import signupPhoto from '../assets/images/login/login.svg'
 import { useContext } from 'react';
 import { AuthContext } from '../component/AuthProvider';
+import Swal from 'sweetalert2';
 
 const SignUp = () => {
   const { loading, createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSignUp = (event) => {
     event.preventDefault();
@@ -16,20 +18,28 @@ const SignUp = () => {
     const newUser = { name, email, password };
     console.log(newUser);
 
-
-
     createUser(email, password)
-      .then(userCredential => console.log(userCredential.user))
+    .then(result=>{
+      const user = result.user;
+      console.log(user);
+      Swal.fire("User logged in as: " + user.email); 
+      navigate(location?.state ? location.state: '/');
+    })
+    .catch(error=>{
+      Swal.fire("Something went wrong.\n" + error.message);
+    })
   }
 
   return (
     <div>
       {
         loading ? <>
-          <span className="loading loading-ring loading-xs"></span>
-          <span className="loading loading-ring loading-sm"></span>
-          <span className="loading loading-ring loading-md"></span>
+        <div className='scale-[5] mx-auto'>
           <span className="loading loading-ring loading-lg"></span>
+          <span className="loading loading-ring loading-lg"></span>
+          <span className="loading loading-ring loading-lg"></span>
+          <span className="loading loading-ring loading-lg"></span>
+        </div>
         </> :
           <div className="hero min-h-screen bg-base-200 lg:px-28">
             <div className="w-full hero-content flex-col lg:flex-row justify-between">

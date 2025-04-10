@@ -37,12 +37,30 @@ const MyBookings = () => {
     });
   };
 
-  const handleProceed = () => {
-    const proceed = confirm("Are you sure?");
-    if (proceed) {
-      alert("He He He");
-    }
+  const handleConfirm = id => {
+    fetch(`http://localhost:8000/bookings/${id}`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ status: 'approved' })
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        if (data.modifiedCount > 0) {
+          // Update the status of the booking in the UI
+          setBookings(prevBookings =>
+            prevBookings.map(booking =>
+              booking._id === id ? { ...booking, status: 'approved' } : booking
+            )
+          );
+        }
+      })
+      .catch(error => {
+        console.error('Error updating status:', error);
+        Swal.fire("Error", "An error occurred while updating status. Please try again later.", "error");
+      });
   }
+
 
   return (
     <div>
@@ -90,8 +108,13 @@ const MyBookings = () => {
                   </td>
                   <td>{booking.date}</td>
                   <th>
-                    <button onClick={handleProceed} className="btn bg-orange-600 text-white btn-sm">Pending</button>
+                    {(booking.status && booking.status === 'approved') ?
+                      <button className="btn bg-green-600 text-white btn-sm">{booking.status}</button>
+                      :
+                      <button onClick={() => handleConfirm(booking._id)} className="btn bg-orange-600 text-white btn-sm">Approve</button>
+                    }
                   </th>
+
                 </tr>
               ))
             }

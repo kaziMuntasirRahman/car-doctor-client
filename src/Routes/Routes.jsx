@@ -5,12 +5,17 @@ import SignUp from "../Pages/SignUp";
 import SignIn from "../Pages/SignIn";
 import CheckOut from "../Pages/CheckOut";
 import MyBookings from "../Pages/MyBookings";
+import ErrorPage from "../Pages/ErrorPage";
+import PrivateRoute from "../component/PrivateRoute";
+import Service from "../Pages/Home/Service";
+import Contact from "../Pages/Contact";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -25,14 +30,22 @@ const router = createBrowserRouter([
         element: <SignIn />
       },
       {
+        path: "/services",
+        element: <Service />
+      },
+      {
+        path: "/contact",
+        element: <Contact />
+      },
+      {
         path: "/checkout/:_id",
         loader: ({ params }) => fetch(`http://localhost:8000/services/${params._id}`),
-        element: <CheckOut />
+        element: <PrivateRoute><CheckOut /></PrivateRoute>
       },
       {
         path: "/mybookings/:email",
         loader: ({ params }) => fetch(`http://localhost:8000/bookings/${params.email}`),
-        element: <MyBookings />
+        element: <PrivateRoute><MyBookings /></PrivateRoute>
       }
     ]
   }

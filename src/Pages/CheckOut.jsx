@@ -74,7 +74,7 @@ const CheckOut = () => {
           <label className="label">
             <span className="label-text">Email</span>
           </label>
-          <input type="email" placeholder="your email" className="input input-bordered" defaultValue={user?.email} name="email" required />
+          <input type="email" placeholder="your email" className="input input-bordered" defaultValue={user.email} name="email" required />
         </div>
 
         <div className="form-control col-span-2 border">

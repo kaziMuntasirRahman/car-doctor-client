@@ -27,7 +27,7 @@ const Navbar = () => {
     {
       user ?
         <>
-        <li><NavLink to={'/profile'}>{user.email}</NavLink></li>
+        <li className="text-lg"><NavLink to={'/profile'}>{user.email}</NavLink></li>
         <li><NavLink to={`/mybookings/${user.email}`}>My Bookings</NavLink></li>
         <button onClick={handleLogOut} className='my-auto mx-2'>Sign Out</button>
         </>

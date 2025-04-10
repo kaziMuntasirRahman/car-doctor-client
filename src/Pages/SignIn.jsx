@@ -1,23 +1,41 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SignInPhoto from '../assets/images/login/login.svg'
-import { useContext } from 'react';
+import { useContext} from 'react';
 import { AuthContext } from '../component/AuthProvider';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const SignIn = () => {
   const { logInUser } = useContext(AuthContext);
+  const location = useLocation();
+  console.log(location);
+  const navigate = useNavigate();
 
   const handleSignInUser = (event) => {
     event.preventDefault();
+    
+
+
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
 
     logInUser(email, password)
-    .then(data=>data.user)
-    .then(user=>{
-      console.log(user);
-      Swal.fire("User logged in as: " + user.email); 
+    .then(result=>{
+      const loggedInUser = result.user;
+      console.log(loggedInUser);
+      Swal.fire("User logged in as: " + loggedInUser.email); 
+      const user = {email};
+      // navigate(location?.state ? location.state: '/');
+      navigate('/')
+      // get access token
+      axios.post('http://localhost:8000/jwt', user, {withCredentials: true})
+      .then(res=>{
+        console.log(res.data);
+      })
+    })
+    .catch(error=>{
+      Swal.fire("Something went wrong.\n" + error.message);
     })
 
   }
@@ -47,10 +65,10 @@ const SignIn = () => {
                   <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                 </label>
               </div>
-              <div className="form-control mt-6">
-                <button className="btn bg-orange-600 text-white">Login</button>
+              <div className="form-control  flex justify-center">
+                <button className="btn w-full mx-auto  bg-orange-600 text-white">Login</button>
               </div>
-              <button className="btn btn-primary">Continue with Google</button>
+              <div className="btn btn-primary cursor-pointer">Continue with Google</div>
               <p className='text-center'>New Here? <Link className='text-orange-600 font-semibold' to={'/signup'}>Sign Up</Link></p>
             </form>
           </div>
